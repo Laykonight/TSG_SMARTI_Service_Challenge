@@ -6,6 +6,6 @@
 !.gitignore
 !*/
 !*.html
-!*.js
+!*.mjs
 !*.json
 /node_modules
