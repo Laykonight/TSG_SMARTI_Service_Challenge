@@ -1,4 +1,4 @@
-# SMARTI System Entity Merger Service
+# SMARTI System Entity Merger Service (by TSG)
 
 The SMARTI System Entity Merger Service is a Node.js service designed to merge identical entities received from different interfaces into a single entity based on priorities defined in a settings file.
 
