@@ -7,5 +7,6 @@
 !*/
 !*.html
 !*.mjs
+!*.txt
 !*.json
 /node_modules
