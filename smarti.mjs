@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import { isNestedEntity, getValue, loadJsonFile } from "./utils.mjs";
+import e from "express";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,75 +12,72 @@ app.use(bodyParser.json());
 
 let prioritiesSettings = loadJsonFile(filePath);
 
-/*  The function merge 2 identical entities into one entity.(sending non identical entities can cause undefined behavior)
-  The function takes an object that contains the two entities in a JSON format.
-  returns object of the merged entity. */
-function mergeEntities(entitiesObject) {
-  const mergedEntity = {};
+function mergingEntities(entityType) {
+  const types = Object.keys(entityType);
+  let entities;
+  let entitiesNames;
+  let firstEntity;
+  const result = {};
+  for (const type of types) {
+    entities = entityType[type];
+    entitiesNames = Object.keys(entities);
+    firstEntity = entities[entitiesNames[0]];
 
-  if (entitiesObject.length === 0) {
-    return mergedEntity;
+    result[type] = merge2(type, firstEntity, entities);
   }
 
-  const entityNames = Object.keys(entitiesObject);
-  const object1 = entitiesObject[entityNames[0]];
-  const object2 = entitiesObject[entityNames[1]];
-
-  return merge(object1, object2, entityNames);
+  // return merge2(types, firstEntity, entities);
+  return result;
 }
 
-/*  Recursive function to merge 2 identical objects (identical objects share the same object structure and keys,
-  sending non identical objects can cause undefined behavior) into one according to prioritiesSettings. 
-  The function takes as parameters the two objects, array contains the two entities names and object key in case 
-  of nested objects. Returns object of a recursive merged entity. */
-function merge(object1, object2, entityNames, objectKey) {
+function merge2(type, firstEntity, entities, objectKey) {
+  if (firstEntity.length === 0) {
+    return {};
+  }
   const mergedEntity = {};
 
-  if (object1.length === 0) {
-    return mergedEntity;
-  }
-
-  const keysList = Object.keys(object1);
-  let value1;
-  let value2;
+  const keysList = Object.keys(firstEntity);
+  let value;
+  // let value2;
 
   for (const key of keysList) {
-    value1 = object1[key];
-    value2 = object2[key];
+    value = firstEntity[key];
+    // value2 = object2[key];
 
-    if (isNestedEntity(value1)) {
-      mergedEntity[key] = merge(value1, value2, entityNames, key);
+    if (isNestedEntity(value)) {
+      mergedEntity[key] = merge2(type, value, entities, key);
     } else {
-      const index = findPrioritizeEntityIndex(entityNames, key);
+      const prioritizeEntity = findPrioritizeEntity(type, entities, key);
       objectKey = key;
 
-      if (index === 1) {
-        mergedEntity[objectKey] = object2[key];
+      if (prioritizeEntity && prioritizeEntity !== firstEntity) {
+        mergedEntity[objectKey] = getValue(prioritizeEntity, key);
         continue;
       }
 
-      mergedEntity[objectKey] = object1[key];
+      mergedEntity[objectKey] = firstEntity[key];
     }
   }
   return mergedEntity;
 }
 
-/*  The function finds the `entityNames` index from priorityOrder of a specific key.
-  The function takes two parameters: Array of entities names and a specific key.
-  returns the index number of the first match from priorityOrder or -1 if the
-  priorityOrder doesn't contain any of the `entityNames`. */
-function findPrioritizeEntityIndex(entityNames, key) {
-  const priorityOrder = getValue(prioritiesSettings.priorities, key);
-  let index = -1;
+function findPrioritizeEntity(type, entities, key) {
+  // console.log("type = " + type);
+  const entityTypes = prioritiesSettings.entityType;
+  const priorities = "priorities";
+
+  const priorityOrder = getValue(entityTypes[type][priorities], key);
+  let prioritizeEntity;
 
   for (const currentEntity of priorityOrder) {
-    index = entityNames.findIndex((entityName) => entityName === currentEntity);
+    prioritizeEntity = entities[currentEntity];
+    // index = entityNames.findIndex((entityName) => entityName === currentEntity);
 
-    if (index !== -1) {
+    if (prioritizeEntity) {
       break;
     }
   }
-  return index;
+  return prioritizeEntity;
 }
 
 /*   Route that handles two identical entities (identical entities share the same structure and keys) 
@@ -92,7 +90,7 @@ app.post("/merge_entities", (req, res) => {
   }
   const entitiesObjectKey = Object.keys(body)[0];
   const entitiesObject = body[entitiesObjectKey];
-  const mergedEntity = mergeEntities(entitiesObject);
+  const mergedEntity = mergingEntities(entitiesObject);
   res.json(mergedEntity);
 });
 

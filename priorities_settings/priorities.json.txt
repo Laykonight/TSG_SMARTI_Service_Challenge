@@ -1,12 +1,23 @@
 {
-  "entityType": "person",
-  "priorities" : {
-    "tz": ["webint", "c2"],
-    "name" : ["webint", "c2"],
-    "age": ["c2", "webint"],
-    "address": {
-      "city": ["c2", "webint"],
-      "region": ["webint", "c2"]
+  "entityType": {
+    "person": {
+      "priorities" : {
+        "tz": ["webint", "c2"],
+        "name" : ["webint", "c2"],
+        "age": ["c2", "webint"],
+        "address": {
+          "city": ["c2", "webint"],
+          "region": ["webint", "c2"]
+        }
+      }
+    },
+    "vehicle": {
+      "priorities" : {
+        "type": ["c2", "webint"],
+        "class": ["webint", "c2"],
+        "engine": ["c2", "webint"],
+        "price": ["webint", "c2"]
+      }
     }
   }
 }
