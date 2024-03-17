@@ -26,7 +26,6 @@ function mergingEntities(entityType) {
     result[type] = merge2(type, firstEntity, entities);
   }
 
-  // return merge2(types, firstEntity, entities);
   return result;
 }
 
@@ -38,11 +37,9 @@ function merge2(type, firstEntity, entities, objectKey) {
 
   const keysList = Object.keys(firstEntity);
   let value;
-  // let value2;
 
   for (const key of keysList) {
     value = firstEntity[key];
-    // value2 = object2[key];
 
     if (isNestedEntity(value)) {
       mergedEntity[key] = merge2(type, value, entities, key);
@@ -62,7 +59,6 @@ function merge2(type, firstEntity, entities, objectKey) {
 }
 
 function findPrioritizeEntity(type, entities, key) {
-  // console.log("type = " + type);
   const entityTypes = prioritiesSettings.entityType;
   const priorities = "priorities";
 
@@ -71,7 +67,6 @@ function findPrioritizeEntity(type, entities, key) {
 
   for (const currentEntity of priorityOrder) {
     prioritizeEntity = entities[currentEntity];
-    // index = entityNames.findIndex((entityName) => entityName === currentEntity);
 
     if (prioritizeEntity) {
       break;
