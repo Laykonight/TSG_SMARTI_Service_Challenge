@@ -11,6 +11,12 @@ app.use(bodyParser.json());
 
 let prioritiesSettings = loadJsonFile(filePath);
 
+/**
+ * Merges entities according to priorities settings.
+ *
+ * @param {Object} entityType - Object containing entities grouped by type.
+ * @returns {Object} - Merged entities based on priority settings.
+ */
 function mergingEntities(entityType) {
   const types = Object.keys(entityType);
   let entities;
@@ -28,6 +34,15 @@ function mergingEntities(entityType) {
   return result;
 }
 
+/**
+ * Recursively merges entity properties based on priorities settings.
+ *
+ * @param {string} type - Type of the entity being merged.
+ * @param {Object} firstEntity - The first entity to merge.
+ * @param {Object} entities - Object containing entities.
+ * @param {string} [objectKey] - Key of the current object being merged.
+ * @returns {Object} - Merged entity.
+ */
 function merge(type, firstEntity, entities, objectKey) {
   if (firstEntity.length === 0) {
     return {};
@@ -57,6 +72,14 @@ function merge(type, firstEntity, entities, objectKey) {
   return mergedEntity;
 }
 
+/**
+ * Finds the prioritized entity for a specific key according to settings.
+ *
+ * @param {string} type - Type of the entity.
+ * @param {Object} entities - Object containing entities.
+ * @param {string} key - Key to find prioritized entity.
+ * @returns {Object} - Prioritized entity.
+ */
 function findPrioritizeEntity(type, entities, key) {
   const entityTypes = prioritiesSettings.entityType;
   const priorities = "priorities";
@@ -74,9 +97,13 @@ function findPrioritizeEntity(type, entities, key) {
   return prioritizeEntity;
 }
 
-/*   Route that handles two identical entities (identical entities share the same structure and keys) 
-  sent as JSON in post request. The route will return JSON of one entity merged from the two.
-  The merge will be according to priorities settings file. */
+/**
+ * Route handler for merging identical entities, sent as JSON in post request, based on priority settings.
+ * The route will return JSON of one merged entity.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ */
 app.post("/merge_entities", (req, res) => {
   const body = req.body;
   if (!body || body.length === 0) {

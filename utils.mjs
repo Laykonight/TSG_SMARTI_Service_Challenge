@@ -1,14 +1,22 @@
 import fs from "fs";
 
-/*  This boolean function takes one parameter and check if it's object. */
+/**
+ * Checks if a value is a nested object.
+ *
+ * @param {*} value - Value to be checked.
+ * @returns {boolean} - True if the value is a nested object, otherwise false.
+ */
 export function isNestedEntity(value) {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-/*  The function retrieves the value of a specific key from an object (able to handle nested objects).
-  The function takes two parameters: The object and a specific key.
-  returns the value of the key if found in the object or implicitly `undefined`,
-  if the object does not contain the key. */
+/**
+ * Retrieves the value of a specific key from an object (handles nested objects).
+ *
+ * @param {Object} obj - The object from which to retrieve the value.
+ * @param {string} key - The key whose value is to be retrieved.
+ * @returns {*} - The value of the specified key, or undefined if the key is not found.
+ */
 export function getValue(obj, key) {
   for (const prop in obj) {
     if (
@@ -26,9 +34,12 @@ export function getValue(obj, key) {
   }
 }
 
-/*  The function loads a JSON format file located at the specified file path.
-  The function takes the path to the file as a string argument.
-  returns object with the file content. */
+/**
+ * Loads a JSON format file located at the specified file path.
+ *
+ * @param {string} filePath - The path to the JSON file.
+ * @returns {Object} - The content of the JSON file.
+ */
 export function loadJsonFile(filePath) {
   try {
     const fileContent = fs.readFileSync(filePath, "utf-8");
