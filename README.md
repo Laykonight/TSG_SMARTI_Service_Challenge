@@ -37,14 +37,94 @@ Example priorities settings file:
 
 ```json
 {
-  "entityType": "person",
-  "priorities": {
-    "tz": ["webint", "c2"],
-    "name": ["webint", "c2"],
-    "age": ["c2", "webint"],
-    "address": {
-      "city": ["c2", "webint"],
-      "region": ["webint", "c2"]
+  "entityType": {
+    "person": {
+      "priorities" : {
+        "tz": ["webint", "A1", "c2"],
+        "name" : ["A1", "webint", "c2"],
+        "age": ["c2","A1", "webint"],
+        "address": {
+          "city": ["A1", "c2", "webint"],
+          "region": ["webint", "c2", "A1"]
+        }
+      }
+    },
+    "vehicle": {
+      "priorities" : {
+        "type": ["A1", "c2", "webint"],
+        "class": ["webint", "A1", "c2"],
+        "engine": ["c2", "webint", "A1"],
+        "price": ["A1", "webint", "c2"]
+      }
     }
   }
 }
+```
+Example JSON of entities send in POST request:
+```json
+{
+  "entityType": {
+    "person": {
+      "webint": {
+        "tz": "123456789",
+        "name": "Moshe",
+        "age": 60,
+      	"address": {
+      	  "city": "Tel-Aviv",
+          "region": "north"
+      	}
+	  },
+	  "c2": {
+	    "tz": "000000000",
+      	"name": "M",
+      	"age": 50,
+      	"address": {
+      	  "city": "Metola",
+          "region": "center"
+      	}
+	  },
+	  "A1": {
+	    "tz": "111111111",
+      	"name": "Moti",
+      	"age": 25,
+      	"address": {
+      	  "city": "Herzlia",
+          "region": "Sharon"
+      	}
+	  }
+	},
+	"vehicle": {
+	  "webint": {
+	    "type": "Car",
+	    "class": "A1"
+	  },
+	  "c2": {
+	    "type": "Ship",
+	    "class": "S1"
+	  },
+	  "A1": {
+	    "type": "Space Ship",
+	    "class": "SS1"
+	  }
+	}
+  }
+}
+```
+Example JSON of merged entity send as respons:
+```json
+{
+    "person": {
+        "tz": "123456789",
+        "name": "Moti",
+        "age": 50,
+        "address": {
+            "city": "Herzlia",
+            "region": "north"
+        }
+    },
+    "vehicle": {
+        "type": "Space Ship",
+        "class": "A1"
+    }
+}
+```
