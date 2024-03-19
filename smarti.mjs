@@ -1,7 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
 import { isNestedEntity, getValue, loadJsonFile } from "./utils.mjs";
-import e from "express";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,13 +22,13 @@ function mergingEntities(entityType) {
     entitiesNames = Object.keys(entities);
     firstEntity = entities[entitiesNames[0]];
 
-    result[type] = merge2(type, firstEntity, entities);
+    result[type] = merge(type, firstEntity, entities);
   }
 
   return result;
 }
 
-function merge2(type, firstEntity, entities, objectKey) {
+function merge(type, firstEntity, entities, objectKey) {
   if (firstEntity.length === 0) {
     return {};
   }
@@ -42,7 +41,7 @@ function merge2(type, firstEntity, entities, objectKey) {
     value = firstEntity[key];
 
     if (isNestedEntity(value)) {
-      mergedEntity[key] = merge2(type, value, entities, key);
+      mergedEntity[key] = merge(type, value, entities, key);
     } else {
       const prioritizeEntity = findPrioritizeEntity(type, entities, key);
       objectKey = key;

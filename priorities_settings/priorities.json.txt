@@ -2,21 +2,21 @@
   "entityType": {
     "person": {
       "priorities" : {
-        "tz": ["webint", "c2"],
-        "name" : ["webint", "c2"],
-        "age": ["c2", "webint"],
+        "tz": ["webint", "A1", "c2"],
+        "name" : ["A1", "webint", "c2"],
+        "age": ["c2","A1", "webint"],
         "address": {
-          "city": ["c2", "webint"],
-          "region": ["webint", "c2"]
+          "city": ["A1", "c2", "webint"],
+          "region": ["webint", "c2", "A1"]
         }
       }
     },
     "vehicle": {
       "priorities" : {
-        "type": ["c2", "webint"],
-        "class": ["webint", "c2"],
-        "engine": ["c2", "webint"],
-        "price": ["webint", "c2"]
+        "type": ["A1", "c2", "webint"],
+        "class": ["webint", "A1", "c2"],
+        "engine": ["c2", "webint", "A1"],
+        "price": ["A1", "webint", "c2"]
       }
     }
   }
